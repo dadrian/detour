@@ -7,15 +7,15 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func BuildLaunchCallback(browser *config.BrowserDefinition) func() {
+func BuildLaunchCallback(browser *config.BrowserDefinition, url string) func() {
 	profile := browser.Profile
 	return func() {
-		LaunchFirefox(profile)
+		LaunchFirefox(profile, url)
 	}
 }
 
-func LaunchFirefox(profileName string) *exec.Cmd {
-	cmd := exec.Command("firefox", "-P", profileName)
+func LaunchFirefox(profileName, url string) *exec.Cmd {
+	cmd := exec.Command("firefox", "-P", profileName, url)
 	logrus.Debugf("launching %s", cmd)
 	cmd.Start()
 	cmd.Process.Release()

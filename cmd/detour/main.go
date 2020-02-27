@@ -46,6 +46,10 @@ func main() {
 	// open -> opens files and shows them in a new window. This corresponds to someone trying to open a document (or documents) using the application from the file browser, or similar.
 	// shutdown ->  performs shutdown tasks
 	// Setup activate signal with a closure function.
+	var url string
+	if len(os.Args) > 1 {
+		url = os.Args[1]
+	}
 	application.Connect("activate", func() {
 		// Create ApplicationWindow
 		appWindow, err := gtk.ApplicationWindowNew(application)
@@ -66,11 +70,18 @@ func main() {
 			if err != nil {
 				logrus.Fatal("could not create button %s", label)
 			}
-			button.Connect("clicked", launcher.BuildLaunchCallback(&browser))
+			launchFunc := launcher.BuildLaunchCallback(&browser, url)
+			button.Connect("clicked", func() {
+				launchFunc()
+				os.Exit(0)
+			})
 			box.PackStart(button, true, true, 0)
 		}
 		appWindow.ShowAll()
 	})
+	//application.Connect("command-line", func() {
+	//	logrus.Warn("command-line signal not implemented")
+	//})
 	// Run Gtk application
-	application.Run(os.Args)
+	application.Run(os.Args[0:1])
 }
