@@ -3,7 +3,10 @@ package config
 import (
 	"errors"
 	"io"
+	"os"
 
+	"github.com/mitchellh/go-homedir"
+	"github.com/sirupsen/logrus"
 	"gopkg.in/yaml.v2"
 )
 
@@ -62,4 +65,34 @@ func ParseConfig(r io.Reader) (*Definition, error) {
 		return nil, err
 	}
 	return &definition, nil
+}
+
+func ConfigFromFile(path string) (*Definition, error) {
+	f, err := os.Open(path)
+	if err != nil {
+		return nil, err
+	}
+	return ParseConfig(f)
+}
+
+var configLocations = []string{
+	"~/.config/detour/detour.yaml",
+	"/etc/detour/detour.yaml",
+}
+
+func LoadDefaultConfig() (*Definition, error) {
+	for _, path := range configLocations {
+		expandedPath, err := homedir.Expand(path)
+		if err != nil {
+			logrus.Warnf("%s: %s", path, err)
+			continue
+		}
+		d, err := ConfigFromFile(expandedPath)
+		if err != nil {
+			logrus.Warnf("%s: %s", expandedPath, err)
+			continue
+		}
+		return d, nil
+	}
+	return nil, errors.New("could not find config")
 }

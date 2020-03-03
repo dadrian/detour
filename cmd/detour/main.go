@@ -2,7 +2,6 @@ package main
 
 import (
 	"os"
-	"strings"
 
 	"github.com/dadrian/detour/config"
 	"github.com/dadrian/detour/launcher"
@@ -31,8 +30,9 @@ func main() {
 	if err != nil {
 		logrus.Fatalf("could not create application: %s", err)
 	}
-	r := strings.NewReader(c)
-	definitions, err := config.ParseConfig(r)
+	//r := strings.NewReader(c)
+	//definitions, err := config.ParseConfig(r)
+	definitions, err := config.LoadDefaultConfig()
 	if err != nil {
 		logrus.Fatalf("error parsing config: %s", err)
 	}

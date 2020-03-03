@@ -15,7 +15,13 @@ func BuildLaunchCallback(browser *config.BrowserDefinition, url string) func() {
 }
 
 func LaunchFirefox(profileName, url string) *exec.Cmd {
-	cmd := exec.Command("firefox", "-P", profileName, url)
+	args := []string{
+		"-P", profileName,
+	}
+	if len(url) > 0 {
+		args = append(args, url)
+	}
+	cmd := exec.Command("firefox", args...)
 	logrus.Debugf("launching %s", cmd)
 	cmd.Start()
 	cmd.Process.Release()
