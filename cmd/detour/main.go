@@ -56,7 +56,6 @@ func main() {
 		if err != nil {
 			logrus.Fatal("Could not create application window.", err)
 		}
-		// Set ApplicationWindow Properties
 		appWindow.SetTitle("Detour")
 		appWindow.SetDefaultSize(100, 100)
 		box, err := gtk.BoxNew(gtk.ORIENTATION_HORIZONTAL, 10)

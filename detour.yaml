@@ -1,0 +1,7 @@
+browsers:
+  - name: Firefox Personal
+    browser: firefox
+    profile: default
+  - name: Firefox Work
+    browser: firefox
+    profile: work
